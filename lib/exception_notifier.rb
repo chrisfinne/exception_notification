@@ -52,6 +52,26 @@ class ExceptionNotifier < ActionMailer::Base
                   :sections => sections })
   end
 
+  def exception_email(exception, notes=nil)
+    if exception.is_a?(Exception)
+      logger.error exception.backtrace
+      subject    "#{email_prefix} (#{exception.class}) #{exception.message.inspect}"
+      body[:backtrace] = sanitize_backtrace(exception.backtrace)
+    elsif exception.is_a?(String)
+      logger.error "EXCEPTION: #{exception}"
+      subject    "#{email_prefix} #{exception}"
+    else
+      logger.error "(#{exception.class})"
+      subject    "#{email_prefix} (#{exception.class})"
+    end
+    
+    recipients exception_recipients
+    from       sender_address
+
+    body[:exception]=exception
+    body[:notes]=notes.to_s
+  end
+
   private
 
     def sanitize_backtrace(trace)

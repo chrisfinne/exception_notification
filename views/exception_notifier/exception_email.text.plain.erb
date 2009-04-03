@@ -1,0 +1,9 @@
+<% if @exception.is_a?(Exception) %>
+  <%= render :partial=>'backtrace' %>
+<% elsif @exception.is_a?(String) %>
+  <%= @exception %>
+<% else %>
+  <%= @exception.to_yaml %>
+<% end %>
+
+<%= @notes %>
