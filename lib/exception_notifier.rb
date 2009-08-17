@@ -52,7 +52,7 @@ class ExceptionNotifier < ActionMailer::Base
                   :sections => sections })
   end
 
-  def exception_email(exception, notes=nil)
+  def exception_email(exception, notes=nil, request=nil)
     if exception.is_a?(Exception)
       logger.error exception.backtrace
       subject    "#{email_prefix} (#{exception.class}) #{exception.message.inspect}"
@@ -70,6 +70,7 @@ class ExceptionNotifier < ActionMailer::Base
 
     body[:exception]=exception
     body[:notes]=notes.to_s
+    body[:request]=request
   end
 
   private
