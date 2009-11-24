@@ -72,6 +72,13 @@ class ExceptionNotifier < ActionMailer::Base
     body[:notes]=notes.to_s
     body[:request]=request
   end
+  
+  def admin_email(the_subject,the_body)
+    from       CP_SYSTEM_EMAIL
+    recipients CP_ADMIN_EMAIL
+    subject    the_subject
+    body[:body]=the_body
+  end
 
   private
 
