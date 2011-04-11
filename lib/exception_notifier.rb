@@ -69,7 +69,7 @@ class ExceptionNotifier < ActionMailer::Base
     from       sender_address
 
     body[:exception]=exception
-    body[:notes]=notes.to_s
+    body[:notes]=notes.inspect
     body[:request]=request
   end
   
