@@ -1,11 +1,11 @@
 <% if @exception.is_a?(Exception) %>
   <%= render :partial=>'backtrace' %>
 <% elsif @exception.is_a?(String) %>
-  <%= @exception %>
+  <%= @exception.html_safe! %>
 <% else %>
-  <%= @exception.to_yaml %>
+  <%= @exception.to_yaml.html_safe! %>
 <% end %>
 
-<%= @notes %>
+<%= @notes.to_s.html_safe! %>
 
 <%= render_section('environment') if @request %>
