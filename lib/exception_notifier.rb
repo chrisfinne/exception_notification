@@ -34,6 +34,10 @@ class ExceptionNotifier < ActionMailer::Base
   cattr_accessor :sections
 
   self.template_root = "#{File.dirname(__FILE__)}/../views"
+  
+  def cp_sender_address
+    %("CP Error" <system@#{global_base_hostname}>)
+  end
 
   def self.reloadable?() false end
 
@@ -43,7 +47,7 @@ class ExceptionNotifier < ActionMailer::Base
     subject    "#{email_prefix}#{controller.controller_name}##{controller.action_name} (#{exception.class}) #{exception.message.inspect}"
 
     recipients exception_recipients
-    from       sender_address
+    from       cp_sender_address
 
     body       data.merge({ :controller => controller, :request => request,
                   :exception => exception, :host => (request.env["HTTP_X_FORWARDED_HOST"] || request.env["HTTP_HOST"]),
@@ -66,7 +70,7 @@ class ExceptionNotifier < ActionMailer::Base
     end
     
     recipients exception_recipients
-    from       sender_address
+    from       cp_sender_address
 
     body[:exception]=exception
     body[:notes]=notes.inspect
@@ -74,7 +78,7 @@ class ExceptionNotifier < ActionMailer::Base
   end
   
   def admin_email(the_subject,the_body)
-    from       CP_SYSTEM_EMAIL
+    from       cp_sender_address
     recipients CP_ADMIN_EMAIL
     subject    the_subject
     body[:body]=the_body
